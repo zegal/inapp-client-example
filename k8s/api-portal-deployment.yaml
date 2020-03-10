@@ -16,7 +16,8 @@ spec:
         app: api-portal
     spec:
       containers:
-      - name: api-portal
-        image: ankitashrma/api-portal:latest
-        ports:
-        - containerPort: 80
+        - name: api-portal
+          image: ankitashrma/api-portal:0.4
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80

@@ -9,10 +9,11 @@ router.get("/", function(req, res, next) {
 
 router.post("/", async function(req, res, next) {
   try {
-    const { document } = req.body;
+    const document = req.body;
     const newDoc = await DocumentService.postDocument(document);
     res.status(200).send(newDoc);
   } catch (err) {
+    console.log(err);
     res.status(400).send(err);
   }
 });

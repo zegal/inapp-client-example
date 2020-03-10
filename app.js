@@ -28,13 +28,16 @@ app.use(function(req, res, next) {
 });
 
 app.use(logger("dev"));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.json({ limit: "50mb", extended: true }));
+app.use(
+  express.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 })
+);
+
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname, 'utils')));
-app.use('/', indexRouter);
-app.use('/documents', documentsRouter);
+app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "utils")));
+app.use("/", indexRouter);
+app.use("/documents", documentsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
