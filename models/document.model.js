@@ -9,7 +9,7 @@ var Document = mongoose.Schema(
   {
     _id: true,
     timestamps: true,
-    collection: "keys",
+    collection: "documents",
   }
 );
 
