@@ -25,8 +25,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'utils')));
-app.use(express.static(path.join(__dirname, '../zegal-client')))
-app.use(express.static(path.join(__dirname, '../../projects')))
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
