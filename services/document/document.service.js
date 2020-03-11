@@ -3,4 +3,7 @@ const postDocument = docData => {
   const document = new Document(docData);
   return document.save();
 };
-module.exports = { postDocument };
+const getAllDocuments = () => {
+  return Document.find().exec();
+};
+module.exports = { postDocument, getAllDocuments };

@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
 const config = require("../config/config");
 
-mongoose.connect(config.db.MONGO_SERVER_CONNECT_STR, {
-  autoReconnect: true,
-  reconnectTries: config.db.reconnectTries,
-  reconnectInterval: config.db.reconnectInterval,
+// to fix all deprecation warnings: https://mongoosejs.com/docs/deprecations.html
+mongoose.connect(process.env.MONGO_SERVER, {
   useNewUrlParser: true,
+  useFindAndModify: false,
+  useUnifiedTopology: true, // http://mongodb.github.io/node-mongodb-native/3.3/reference/unified-topology/
 });
 
 const db = mongoose.connection;
