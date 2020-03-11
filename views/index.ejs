@@ -27,16 +27,17 @@
 		</head>
 		<body>
 			<div id='container'>
-			<form>
-				<div class="form-group">
-					<label for="name">Document title</label>
-					<input type="text" class="form-control" id="docTitle">
-				</div>
-				<button type='button' class="btn btn-primary" id='zegalButton' onclick="createDocumentHandler()" data-toggle="modal" data-target="#createModal">Submit</button>
-				<button class="btn btn-success">Done</button>
-			</form>
-			<a href="/documents"> List of documents </a>
-		</div>
+				<form>
+					<div class="form-group">
+						<label for="name">Document title</label>
+						<input type="text" class="form-control" id="docTitle">
+					</div>
+					<button type='button' class="btn btn-primary" id='zegalButton' onclick="createDocumentHandler()" data-toggle="modal" data-target="#createModal">Submit</button>
+					<button class="btn btn-success">Done</button>
+				</form>
+				<a href="/documents"> List of documents </a>
+			</div>
+		<div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-hidden="true"></div>
 	</body>
 	<script src="utils.js"></script>
 </html>
