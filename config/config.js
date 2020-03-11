@@ -1,7 +1,5 @@
-const env = require("dotenv").config()
-const db = require("./db")
+const env = require("dotenv").config();
 
 module.exports = {
   ...env.parsed,
-  ...db
-}
+};
