@@ -23,35 +23,84 @@
 			zegal = new Zegal(key);
 			zegal.init();
 		</script>
-
 		</head>
 		<body>
 			<div id='container'>
-				<form>
-					<div class="form-group">
-						<label for="name">Document title</label>
-						<input type="text" class="form-control" id="docTitle">
+				<div class="row">
+					<div class="col-3">
+						<div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+							<% zegalDoctypes.forEach(function(doctype){ %>
+								<button class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab"
+									aria-controls="v-pills-home" aria-selected="true" onclick="selectDoctype('<%= doctype.id %>')"><%= doctype.display_name %></button>
+							<% }) %>
+						</div>
 					</div>
-					<button type='button' class="btn btn-primary" id='zegalButton' onclick="createDocumentHandler()" data-toggle="modal" data-target="#createModal">Submit</button>
-					<button class="btn btn-success">Done</button>
-				</form>
+					<div class="col-9 well well-lg" style="background-color: #f2f2f2">
+						<form>
+							<div class="form-group">
+								<label for="name">Document title</label>
+								<input type="text" class="form-control" id="docTitle">
+							</div>
+							<div class="form-check">
+								<input type="checkbox" class="form-check-input" id="addSigners" checked=''>
+								<label class="form-check-label" for="addSigners">Add Signers</label>
+								<div class="well well-lg" style="background-color: #e1e2e6" id='signersBlock'>
+									<form>
+										<div class="form-group">
+											<input type="text" class="form-control" id="given_name" placeholder='First name'>
+										</div>
+										<div class="form-group">
+											<input type="text" class="form-control" id="surname" placeholder='Last name'>
+										</div>
+										<div class="form-group">
+											<input type="email" class="form-control" id="email" placeholder='Email'>
+										</div>
+									</form>
+								</div>
+							</div>
+							<div class="form-check">
+								<input type="checkbox" class="form-check-input" id="enablePreview" checked>
+								<label class="form-check-label" for="enablePreview">Enable preview</label>
+							</div>
+							<div class="form-check">
+								<input type="checkbox" class="form-check-input" id="enableDownload" checked=''>
+								<label class="form-check-label" for="enableDownload">Enable download</label>
+							</div>
+							<button type='button' class="btn btn-primary" id='zegalButton' onclick="createDocumentHandler()" data-toggle="modal" data-target="#createModal">Submit</button>
+							<!-- <button class="btn btn-success">Done</button> -->
+						</form>
+					</div>
+				</div>
+
 				<a href="/documents"> List of documents </a>
 			</div>
-		<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" id='createModal'aria-hidden="true">
-			<div class="modal-dialog modal-lg" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</div>
-					<div class="modal-body mb-0 p-0">
-						<div class="embed-responsive embed-responsive-16by9 z-depth-1-half" id="createModalBody" >
+			<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" id='createModal'aria-hidden="true">
+				<div class="modal-dialog modal-lg" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 id='modalTitle'></h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body mb-0 p-0">
+							<div class="embed-responsive embed-responsive-16by9 z-depth-1-half" id="createModalBody" >
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
 	</body>
 	<script src="utils.js"></script>
+	<script>
+		$(function () {
+				$("#addSigners").click(function () {
+					if ($(this).is(":checked")) {
+						$("#signersBlock").show();
+					} else {
+						$("#signersBlock").hide();
+					}
+				});
+			});
+	</script>
 </html>
