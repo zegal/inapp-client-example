@@ -16,6 +16,29 @@ let user = {
 	email: "",
 	role: "member",
 }
+
+let zegal
+let doctypes
+async function initialize() {
+	const key = 'pk_8e367994-27df-43ee-8a16-f0fb1c513ce3'
+	zegal =  new Zegal(key);
+	await zegal.init();
+	getDoctypes();
+}
+
+async function getDoctypes() {
+	let doctypes = await zegal.getDoctypes();
+	let doctypeChooser = $('#doctypeChooser')
+	doctypes.forEach((guide) => {
+		Object.entries(guide).forEach(([key, doctypes]) => {
+			doctypes.map((doctype) => {
+				button = $(`<button class="nav-link active" id="v-pills-home-tab" data-toggle="pill" role="tab" aria-controls="v-pills-home" aria-selected="true" onclick="selectDoctype(doctype.id)">${doctype.display_name}</button>`);
+				button.on('click', () => selectDoctype(key, doctype.id));
+				doctypeChooser.append(button)
+			})
+		})
+	})
+}
 async function createDocumentHandler() {
 	user = {
 		...user,
@@ -36,11 +59,12 @@ async function createDocumentHandler() {
 		disableDownload: !document.getElementById('enableDownload').checked
 	}
 	
-	document.getElementById('modalTitle').innerHTML = doctypePayload.title
+	// document.getElementById('modalTitle').innerHTML = doctypePayload.title
 	await zegal.createDocument(doctypePayload, options)
 };
 
 
-const selectDoctype = (id) => {
-	doctypePayload.doctype = id
+const selectDoctype = (guideId, doctypeId) => {
+	doctypePayload.doctype = doctypeId
+	doctypePayload.guide = guideId
 }

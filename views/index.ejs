@@ -17,22 +17,16 @@
 		<!-- initilizing zegal-client -->
 		<!-- <script src="/dist/zegal.local.js"></script> -->
 		<script src="https://zegal-client.s3.ap-south-1.amazonaws.com/dev/zegal.js"></script>
-		<script>
-			let zegal
-			const key = 'pk_8e367994-27df-43ee-8a16-f0fb1c513ce3'
-			zegal = new Zegal(key);
-			zegal.init();
-		</script>
+		<script src="utils.js"></script>
+
+		<script>initialize()</script>
 		</head>
 		<body>
 			<div id='container'>
 				<div class="row">
 					<div class="col-3">
-						<div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-							<% zegalDoctypes.forEach(function(doctype){ %>
-								<button class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab"
-									aria-controls="v-pills-home" aria-selected="true" onclick="selectDoctype('<%= doctype.id %>')"><%= doctype.display_name %></button>
-							<% }) %>
+						<div class="nav flex-column nav-pills" id='doctypeChooser' role="tablist" aria-orientation="vertical">
+						
 						</div>
 					</div>
 					<div class="col-9 well well-lg" style="background-color: #f2f2f2">
@@ -42,7 +36,7 @@
 								<input type="text" class="form-control" id="docTitle">
 							</div>
 							<div class="form-check">
-								<input type="checkbox" class="form-check-input" id="addSigners" checked=''>
+								<input type="checkbox" class="form-check-input" id="addSigners">
 								<label class="form-check-label" for="addSigners">Add Signers</label>
 								<div class="well well-lg" style="background-color: #e1e2e6" id='signersBlock'>
 									<form>
@@ -78,7 +72,7 @@
 				<div class="modal-dialog modal-lg" role="document">
 					<div class="modal-content">
 						<div class="modal-header">
-							<h5 id='modalTitle'></h5>
+							<!-- <h5 id='modalTitle'></h5> -->
 							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 								<span aria-hidden="true">&times;</span>
 							</button>
@@ -91,16 +85,24 @@
 				</div>
 			</div>
 	</body>
-	<script src="utils.js"></script>
+
 	<script>
 		$(function () {
-				$("#addSigners").click(function () {
-					if ($(this).is(":checked")) {
-						$("#signersBlock").show();
-					} else {
-						$("#signersBlock").hide();
-					}
-				});
+			$("#signersBlock").hide();
+
+			$("#addSigners").click(function () {
+				if ($(this).is(":checked")) {
+					$("#signersBlock").show();
+				} else {
+					$("#signersBlock").hide();
+				}
 			});
+		});
+
+		window.addEventListener('message', function (e) {
+			$("#createModal").modal('hide');
+			alert('Transaction completed')
+		}, false);
+		
 	</script>
 </html>
