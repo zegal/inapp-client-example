@@ -16,10 +16,10 @@
 			crossorigin="anonymous"></script>
 		<!-- initilizing zegal-client -->
 		<!-- <script src="/dist/zegal.local.js"></script> -->
-		<script src="https://zegal-client.s3.ap-south-1.amazonaws.com/dev/zegal.js"></script>
+		<script src='<%= zegalClient%>'></script>
 		<script src="utils.js"></script>
 
-		<script>initialize()</script>
+		<script>initialize('<%= key%>')</script>
 		</head>
 		<body>
 			<div id='container'>

@@ -19,8 +19,7 @@ let user = {
 
 let zegal
 let doctypes
-async function initialize() {
-	const key = 'pk_8e367994-27df-43ee-8a16-f0fb1c513ce3'
+async function initialize(key) {
 	zegal =  new Zegal(key);
 	await zegal.init();
 	getDoctypes();
@@ -33,7 +32,7 @@ async function getDoctypes() {
 		Object.entries(guide).forEach(([key, doctypes]) => {
 			doctypes.map((doctype) => {
 				button = $(`<button class="nav-link active" id="v-pills-home-tab" data-toggle="pill" role="tab" aria-controls="v-pills-home" aria-selected="true" onclick="selectDoctype(doctype.id)">${doctype.display_name}</button>`);
-				button.on('click', () => selectDoctype(key, doctype.id));
+				button.on('click', () => selectDoctype(key, doctype.id, doctype.display_name));
 				doctypeChooser.append(button)
 			})
 		})
@@ -64,7 +63,8 @@ async function createDocumentHandler() {
 };
 
 
-const selectDoctype = (guideId, doctypeId) => {
+const selectDoctype = (guideId, doctypeId, docName) => {
+	document.getElementById("docTitle").value = docName
 	doctypePayload.doctype = doctypeId
 	doctypePayload.guide = guideId
 }
