@@ -6,7 +6,8 @@ router.get("/", async function(req, res, next) {
   res.render("index", {
     title: "API Portal",
     zegalClient: process.env.ZEGAL_CLIENT,
-    key: process.env.CLIENT_KEY
+    key: process.env.CLIENT_KEY,
+    signers: []
   });
 });
 
