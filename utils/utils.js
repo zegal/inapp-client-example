@@ -3,7 +3,7 @@ let doctypePayload = {
 	guide: "5db157dd545208010092943a",
 }
 let options = {}
-let user = {
+let users = [{
 	access: {
 		type: "view",
 		invited: false
@@ -13,8 +13,10 @@ let user = {
 		surname: ""
 	},
 	signature: {invoked: true },//signers
-	email: "",
-}
+	email: '',
+	signing_as: '',
+	party: ''
+}]
 
 let zegal
 let doctypes
@@ -31,7 +33,7 @@ const toSnakeCase = (str) => {
 			.join('_');
 	}
 }
-	
+
 async function getDoctypes() {
 
 	let guideCats = await zegal.getDoctypes();
@@ -95,20 +97,11 @@ async function getDoctypes() {
 // 	})
 // }
 async function createDocumentHandler() {
-	user = {
-		...user,
-		primary_name: {
-			given_name: document.getElementById("given_name").value,
-			surname: document.getElementById("surname").value
-		},
-		email: document.getElementById("email").value,
-		signing_as: $("#role_select :selected").text(),
-		party: $("#party_select :selected").text()
-	}
 	doctypePayload = {
 		...doctypePayload,
 		title: document.getElementById("docTitle").value || 'New document',
-		users: document.getElementById('addSignersInfo').checked ? [user]: []
+		users
+		// users: document.getElementById('addSignersInfo').checked ? [user]: []
 	}
 	options = {
 		disableSignerAdd: !document.getElementById('enableAddSigners').checked,
@@ -123,7 +116,7 @@ async function createDocumentHandler() {
 
 const selectDoctype = async(guideId, doctypeId, docName) => {
 	const doctypeDetails = await zegal.getDoctypeSample(doctypeId)
-	const partySelect = $('#party_select')
+	const partySelect = $('.party_select')
 	partySelect.on('change', (e) => updateSignerRoles(e, doctypeDetails.parties));
 	doctypeDetails.parties && doctypeDetails.parties.map((party) => {
 		const option = $(`<option id='${party.id}'>${party.name}</option>`);
@@ -137,11 +130,76 @@ const selectDoctype = async(guideId, doctypeId, docName) => {
 const updateSignerRoles = (e, parties) => {
 	const selectedParty = e.target.value
 	const party = parties.find((party) => party.name === selectedParty)
-	const roleSelect = $('#role_select')
-	
+	const roleSelect = $('.role_select')
+	const user = users[e.target.id.charAt(5)]
+
+	user[e.target.name] = $(`#${e.target.id} :selected`).text()
 	roleSelect.empty()
+	roleSelect.on('change', (e) => {
+		const user = users[e.target.id.charAt(10)]
+		user[e.target.name] = $(`#${e.target.id} :selected`).text()
+	});
 	party.signingRoles.map((role) => {
 		const option = $(`<option>${role}</option>`);
 		roleSelect.append(option)
 	})
+}
+
+const populateSigners = () => {
+	const signersBlock = $('#signersBlock')
+	users.map((user, i) => {
+		const signer = $(`
+							<form class="col-11" id='form${i}'>
+								<div class="form-group">
+									<input type="text" class="form-control" id="given_name${i}" placeholder='First name' value='${user.primary_name.given_name}' onchange='updatePrimaryName(${i}, "given_name")'>
+								</div>
+								<div class="form-group">
+									<input type="text" class="form-control" id="surname${i}" placeholder='Last name' value='${user.primary_name.surname}' onchange='updatePrimaryName(${i}, "surname")'>
+								</div>
+								<div class="form-group">
+									<input type="email" class="form-control" id="email${i}" placeholder='Email' value='${user.email}' onchange='updateUser(${i}, "email")'>
+								</div>
+								<select class="form-group form-control party_select" id="party${i}" value='${user.party}' name='party'>
+									<option>Select signer party</option>
+								</select>
+								<select class="form-group form-control role_select" id="signing_as${i}" value='${user.signing_as}' name='signing_as'>
+									<option>Select signer role</option>
+								</select>
+								<hr/>
+							</form>
+						`)
+
+		signersBlock.append(signer);
+
+	})
+}
+const addSignerForm = () => {
+	const signersBlock = $('#signersBlock')
+	signersBlock.empty()
+	users.push({
+		access: {
+			type: "view",
+			invited: false
+		},
+		primary_name: {
+			given_name: "",
+			surname: ""
+		},
+		signature: { invoked: true },//signers
+		email: '',
+		signing_as: '',
+		party: ''
+	})
+	populateSigners()
+}
+
+const updatePrimaryName = (i, name) => {
+	const user = users[i].primary_name
+	user[name] = document.getElementById(`${name}${i}`).value
+	console.log('.............', name, user[name], document.getElementById(`${name}${i}`).value)
+}
+const updateUser = (i, name) => {
+	const user = users[i]
+	user[name] = document.getElementById(`${name}${i}`).value
+	console.log('.............', name, user[name], document.getElementById(`${name}${i}`).value)
 }
