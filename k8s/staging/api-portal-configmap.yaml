@@ -1,0 +1,11 @@
+apiVersion: v1
+data:
+  MONGO_SERVER: mongodb+srv://apiPortal:dragonlaw@cluster0-h8ub3.mongodb.net/apiportal?retryWrites=true&w=majority
+  PORT: "3000"
+  ZEGAL_CLIENT: https://zegal-client.s3.ap-south-1.amazonaws.com/staging/zegal.js
+  CLIENT_KEY: pk_090c1208-321b-4038-9c63-500c86613378
+  NODE_ENV: staging
+kind: ConfigMap
+metadata:
+  name: api-portal-config
+  namespace: staging

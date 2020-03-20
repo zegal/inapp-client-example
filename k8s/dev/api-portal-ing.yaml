@@ -9,7 +9,7 @@ metadata:
   namespace: dev
 spec:
   rules:
-    - host: api-portal.k8s.zegal.com
+    - host: api-portal.dev-a.k8s.zegal.com
       http:
         paths:
           - backend:
