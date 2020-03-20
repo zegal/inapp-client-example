@@ -14,7 +14,6 @@ let user = {
 	},
 	signature: {invoked: true },//signers
 	email: "",
-	role: "member",
 }
 
 let zegal
@@ -25,6 +24,14 @@ async function initialize(key) {
 	getDoctypes();
 }
 
+const toSnakeCase = (str) => {
+	if(str) {
+		return str.match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g)
+			.map(x => x.toLowerCase())
+			.join('_');
+	}
+}
+	
 async function getDoctypes() {
 
 	let guideCats = await zegal.getDoctypes();
@@ -37,16 +44,25 @@ async function getDoctypes() {
 		// guideChooser.append(button)
 
 		accordion.append($(`
-			<button class="btn" data-toggle="collapse" data-target="#${guideCat._id}" aria-expanded="true"
-			aria-controls="${guideCat._id}">
-			${guideCat.name}
-		</button>
 
-		<div id="${guideCat._id}" class="collapse btn-group flex-column nav-pills" data-parent="#accordion">
+			<div class="card">
+				<div class="card-header" id="cat${toSnakeCase(guideCat.name)}">
+					<h5 class="mb-0">
+						<button role="button" class="btn btn-link collapsed" data-toggle="collapse" data-target="#${toSnakeCase(guideCat.name)}" aria-expanded="false"
+							aria-controls="${toSnakeCase(guideCat.name)}">
+							${guideCat.name}
+						</button>
+					</h5>
+				</div>
 			
-		</div>
+				<div id="${toSnakeCase(guideCat.name)}" class="collapse card-body" aria-labelledby="cat${toSnakeCase(guideCat.name)}" data-parent="#accordion">
+				</div>
+			</div>
+
+		
+
 		`))
-		const guideCatDiv = $(`#${guideCat._id}`)
+		const guideCatDiv = $(`#${toSnakeCase(guideCat.name)}`)
 		guideCat.guides.map((guide) => {
 
 			guideDiv = $(`<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
@@ -85,7 +101,9 @@ async function createDocumentHandler() {
 			given_name: document.getElementById("given_name").value,
 			surname: document.getElementById("surname").value
 		},
-		email: document.getElementById("email").value
+		email: document.getElementById("email").value,
+		signing_as: $("#role_select :selected").text(),
+		party: $("#party_select :selected").text()
 	}
 	doctypePayload = {
 		...doctypePayload,
@@ -103,8 +121,27 @@ async function createDocumentHandler() {
 };
 
 
-const selectDoctype = (guideId, doctypeId, docName) => {
+const selectDoctype = async(guideId, doctypeId, docName) => {
+	const doctypeDetails = await zegal.getDoctypeSample(doctypeId)
+	const partySelect = $('#party_select')
+	partySelect.on('change', (e) => updateSignerRoles(e, doctypeDetails.parties));
+	doctypeDetails.parties && doctypeDetails.parties.map((party) => {
+		const option = $(`<option id='${party.id}'>${party.name}</option>`);
+		partySelect.append(option)
+	})
 	document.getElementById("docTitle").value = docName
 	doctypePayload.doctype = doctypeId
 	doctypePayload.guide = guideId
+}
+
+const updateSignerRoles = (e, parties) => {
+	const selectedParty = e.target.value
+	const party = parties.find((party) => party.name === selectedParty)
+	const roleSelect = $('#role_select')
+	
+	roleSelect.empty()
+	party.signingRoles.map((role) => {
+		const option = $(`<option>${role}</option>`);
+		roleSelect.append(option)
+	})
 }
