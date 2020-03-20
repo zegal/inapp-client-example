@@ -36,14 +36,6 @@
 						<div class="nav flex-column nav-pills" id="accordion" aria-orientation="vertical" role="tablist">
 							
 						</div>
-						<div class="btn-group dropright nav flex-column nav-pills" id='guidesMenu'  role="tablist" aria-orientation="vertical">
-							<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-								aria-expanded="false">
-								Dropright
-							</button>
-							<div class="dropdown-menu">
-							</div>
-						</div>
 					</div>
 					<div class="col-9 well well-lg" style="background-color: #f2f2f2">
 						<form>
@@ -55,19 +47,17 @@
 								<input type="checkbox" class="form-check-input" id="addSignersInfo">
 								<label class="form-check-label" for="addSignersInfo">Add Signers</label>
 								<div class="well well-lg" style="background-color: #e1e2e6" id='signersBlock'>
-									<% signers.forEach(function(signer, i) { %>
-									<form>
-										<div class="form-group">
-											<input type="text" class="form-control" id="given_name" placeholder='First name' value="<%= signer.given_name %>">
-										</div>
-										<div class="form-group">
-											<input type="text" class="form-control" id="surname" placeholder='Last name' value='<%= signer.surname%>'>
-										</div>
-										<div class="form-group">
-											<input type="email" class="form-control" id="email" placeholder='Email' value="<%= signer.email %>">
-										</div>
-									</form>
-									<% }); %>
+								<form>
+									<div class="form-group">
+										<input type="text" class="form-control" id="given_name" placeholder='First name'>
+									</div>
+									<div class="form-group">
+										<input type="text" class="form-control" id="surname" placeholder='Last name'>
+									</div>
+									<div class="form-group">
+										<input type="email" class="form-control" id="email" placeholder='Email'>
+									</div>
+								</form>
 									
 								</div>
 							</div>
@@ -116,8 +106,6 @@
 			$("#addSignersInfo").click(function () {
 				if ($(this).is(":checked")) {
 					$("#signersBlock").show();
-					`<%= signers %>.push({given_name: '', surname: '', email: ''})`
-					console.log('..............', '<%= signers %>')
 				} else {
 					$("#signersBlock").hide();
 				}
