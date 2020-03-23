@@ -100,13 +100,13 @@ async function createDocumentHandler() {
 	doctypePayload = {
 		...doctypePayload,
 		title: document.getElementById("docTitle").value || 'New document',
-		users
-		// users: document.getElementById('addSignersInfo').checked ? [user]: []
+		users: document.getElementById('addSignersInfo').checked ? users : []
 	}
 	options = {
 		disableSignerAdd: !document.getElementById('enableAddSigners').checked,
 		disablePreview: !document.getElementById('enablePreview').checked,
-		disableDownload: !document.getElementById('enableDownload').checked
+		disableDownload: !document.getElementById('enableDownload').checked,
+		docCompletionButton: document.getElementById('docCompletionButton').value || 'Complete DBQ'
 	}
 	
 	// document.getElementById('modalTitle').innerHTML = doctypePayload.title
@@ -196,10 +196,8 @@ const addSignerForm = () => {
 const updatePrimaryName = (i, name) => {
 	const user = users[i].primary_name
 	user[name] = document.getElementById(`${name}${i}`).value
-	console.log('.............', name, user[name], document.getElementById(`${name}${i}`).value)
 }
 const updateUser = (i, name) => {
 	const user = users[i]
 	user[name] = document.getElementById(`${name}${i}`).value
-	console.log('.............', name, user[name], document.getElementById(`${name}${i}`).value)
 }
