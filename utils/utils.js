@@ -1,6 +1,8 @@
 let doctypePayload = {
-	doctype: "5e5f3ade436e69c4ad043b0b",
-	guide: "5db157dd545208010092943a",
+	doctype: "",
+	guide: "",
+	// doctype: "5e5f3ade436e69c4ad043b0b",
+	// guide: "5db157dd545208010092943a",
 }
 let options = {}
 let users = [{
@@ -96,21 +98,35 @@ async function getDoctypes() {
 // 		})
 // 	})
 // }
+
+const checkDoctypeSelected = () => {
+	if (doctypePayload.guide) {
+		return true
+	}
+	return false
+}
 async function createDocumentHandler() {
-	doctypePayload = {
-		...doctypePayload,
-		title: document.getElementById("docTitle").value || 'New document',
-		users: document.getElementById('addSignersInfo').checked ? users : []
+	const doctypeSelected = checkDoctypeSelected()
+	if(doctypePayload.guide) {
+		$('#zegalButton').attr('data-target', "#createModal")
+		doctypePayload = {
+			...doctypePayload,
+			title: document.getElementById("docTitle").value || 'New document',
+			users: document.getElementById('addSignersInfo').checked ? users : []
+		}
+		options = {
+			disableSignerAdd: !document.getElementById('enableAddSigners').checked,
+			disablePreview: !document.getElementById('enablePreview').checked,
+			disableDownload: !document.getElementById('enableDownload').checked,
+			docCompletionButton: document.getElementById('docCompletionButton').value || 'Complete DBQ'
+		}
+		
+		// document.getElementById('modalTitle').innerHTML = doctypePayload.title
+		await zegal.createDocument(doctypePayload, options)
+	} else {
+		alert('Please select doctype');
+		return
 	}
-	options = {
-		disableSignerAdd: !document.getElementById('enableAddSigners').checked,
-		disablePreview: !document.getElementById('enablePreview').checked,
-		disableDownload: !document.getElementById('enableDownload').checked,
-		docCompletionButton: document.getElementById('docCompletionButton').value || 'Complete DBQ'
-	}
-	
-	// document.getElementById('modalTitle').innerHTML = doctypePayload.title
-	await zegal.createDocument(doctypePayload, options)
 };
 
 
