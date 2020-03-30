@@ -25,7 +25,7 @@ let doctypes
 async function initialize(key) {
 	zegal =  new Zegal(key);
 	await zegal.init();
-	getDoctypes();
+	getAllGuides();
 }
 
 const toSnakeCase = (str) => {
@@ -39,14 +39,11 @@ const toSnakeCase = (str) => {
 	}
 }
 
-async function getDoctypes() {
+async function getAllGuides() {
 
 	let guideCats = await zegal.getAllGuides();
 	let accordion = $('#accordion')
 	guideCats.forEach((guideCat) => {
-		// button = $(`<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-		// 						aria-expanded="false">${guide.name}</button>`);
-		// guideChooser.append(button)
 
 		accordion.append($(`
 
@@ -90,19 +87,6 @@ async function getDoctypes() {
 		})
 	})
 }
-// async function getDoctypes() {
-// 	let doctypes = await zegal.getDoctypes();
-// 	let doctypeChooser = $('#doctypeChooser')
-// 	doctypes.forEach((guide) => {
-// 		Object.entries(guide).forEach(([key, doctypes]) => {
-// 			doctypes.map((doctype) => {
-// 				button = $(`<button class="nav-link active" id="v-pills-home-tab" data-toggle="pill" role="tab" aria-controls="v-pills-home" aria-selected="true" onclick="selectDoctype(doctype.id)">${doctype.display_name}</button>`);
-// 				button.on('click', () => selectDoctype(key, doctype.id, doctype.display_name));
-// 				doctypeChooser.append(button)
-// 			})
-// 		})
-// 	})
-// }
 
 async function createDocumentHandler() {
 	if(doctypePayload.guide) {
@@ -119,7 +103,6 @@ async function createDocumentHandler() {
 			docCompletionButton: document.getElementById('docCompletionButton').value || 'Complete DBQ'
 		}
 		
-		// document.getElementById('modalTitle').innerHTML = doctypePayload.title
 		await zegal.createDocument(doctypePayload, options)
 	} else {
 		alert('Please select doctype');
@@ -136,12 +119,12 @@ const selectDoctype = async(guideId, doctypeId, docName) => {
 	doctypePayload.guide = guideId
 
 	populatePartyOptions();
+	$(window).scrollTop(0);
 }
 
 const populatePartyOptions = () => {
 	const partySelect = $('.party_select')
-	// partySelect.on('change', (e) => updateSignerRoles(e, doctypeDetails.parties));
-	partySelect.empty()
+	// partySelect.empty()
 	doctypeDetails.parties && doctypeDetails.parties.map((party) => {
 		const option = $(`<option id='${party.id}'>${party.name}</option>`);
 		partySelect.append(option)
@@ -154,7 +137,7 @@ const updateSignerRoles = (e) => {
 	const roleSelect = $(`#signing_as${e.target.id.charAt(5)}`)
 	const user = users[e.target.id.charAt(5)]
 	user[e.target.name] = $(`#${e.target.id} :selected`).text()
-	roleSelect.empty()
+	// roleSelect.empty()
 	roleSelect.on('change', (e) => {
 
 		const user = users[e.target.id.charAt(10)]
@@ -184,7 +167,7 @@ const populateSigners = () => {
 									<option>Select signer party</option>
 								</select>
 								<select class="form-group form-control role_select" id="signing_as${i}" value='${user.signing_as}' name='signing_as'>
-									<option>Select signer role</option>
+									<option>Select signer role</option>	
 								</select>
 								<hr/>
 							</form>
@@ -198,17 +181,9 @@ const populateSigners = () => {
 			updateSignerRoles(e)
 		});
 
-		// $(`#party${i}`).val(user.party)
-		// 	.find("option[value='" + `${user.party}` + "']").attr('selected', true);
+		user.party && $(`#party${i}`).append(`<option selected>${user.party}</option>`)
+		user.signing_as && $(`#signing_as${i}`).append(`<option selected>${user.signing_as}</option>`)
 
-		$(`#party${i} option`).each(function () {
-			if ($(this).val() === user.party)
-				$(this).attr("selected", true);
-		});
-
-		// $(`#party${i} option`).filter(function () {
-		// 	return ($(this).val() == user.party); //To select Blue
-		// }).prop('selected', true);
 	})
 }
 const addSignerForm = () => {
