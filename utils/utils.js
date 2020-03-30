@@ -30,17 +30,18 @@ async function initialize(key) {
 
 const toSnakeCase = (str) => {
 	if(str) {
-		return str.match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g)
-			.map(x => x.toLowerCase())
-			.join('_');
+		const match = str.match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g)
+		if(match) {
+			return match
+				.map(x => x.toLowerCase())
+				.join('_');
+		}
 	}
 }
 
 async function getDoctypes() {
 
-	let guideCats = await zegal.getDoctypes();
-	let doctypeChooser = $('#doctypeChooser')
-	let guideChooser = $('#guidesMenu')
+	let guideCats = await zegal.getAllGuides();
 	let accordion = $('#accordion')
 	guideCats.forEach((guideCat) => {
 		// button = $(`<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
@@ -70,18 +71,22 @@ async function getDoctypes() {
 		guideCat.guides.map((guide) => {
 
 			guideDiv = $(`<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-									aria-expanded="false">${guide.name}</button>`);
+									aria-expanded="false" name='${guide.name}'>${guide.name}</button>`);
 			guideCatDiv.append(guideDiv)
-			const doctypeList = $(`<div class="dropdown-menu"></div >`)
-
-			guide.doctypes.map((doctype) => {
-				doctypes = $(`<button class="dropdown-item" href="#">${doctype.display_name}</button>`)
-				doctypes.on('click', () => selectDoctype(guide._id, doctype.id, doctype.display_name));
-
-				doctypeList.append(doctypes)
+			let doctypeList = $(`<div class="dropdown-menu"></div >`)
+			guideDiv.on('click', (e) => {
+				const selectedGuide = guideCat.guides.find((guide) => guide.name === e.target.name)
+				doctypeList.empty()
+				selectedGuide.doctypes.map((doctype) => {
+					console.log(e.target.name, doctype.display_name)
+					doctypes = $(`<button class="dropdown-item" href="#">${doctype.display_name}</button>`)
+					doctypes.on('click', () => selectDoctype(guide._id, doctype.id, doctype.display_name));
+	
+					doctypeList.append(doctypes)
+				})
+	
+				guideCatDiv.append(doctypeList)
 			})
-
-			guideCatDiv.append(doctypeList)
 		})
 	})
 }
@@ -99,14 +104,7 @@ async function getDoctypes() {
 // 	})
 // }
 
-const checkDoctypeSelected = () => {
-	if (doctypePayload.guide) {
-		return true
-	}
-	return false
-}
 async function createDocumentHandler() {
-	const doctypeSelected = checkDoctypeSelected()
 	if(doctypePayload.guide) {
 		$('#zegalButton').attr('data-target', "#createModal")
 		doctypePayload = {
@@ -129,29 +127,36 @@ async function createDocumentHandler() {
 	}
 };
 
-
+let doctypeDetails
 const selectDoctype = async(guideId, doctypeId, docName) => {
-	const doctypeDetails = await zegal.getDoctypeSample(doctypeId)
+	doctypeDetails = await zegal.getDoctypeSample(doctypeId)
+	
+	document.getElementById("docTitle").value = docName
+	doctypePayload.doctype = doctypeId
+	doctypePayload.guide = guideId
+
+	populatePartyOptions();
+}
+
+const populatePartyOptions = () => {
 	const partySelect = $('.party_select')
-	partySelect.on('change', (e) => updateSignerRoles(e, doctypeDetails.parties));
+	// partySelect.on('change', (e) => updateSignerRoles(e, doctypeDetails.parties));
+	partySelect.empty()
 	doctypeDetails.parties && doctypeDetails.parties.map((party) => {
 		const option = $(`<option id='${party.id}'>${party.name}</option>`);
 		partySelect.append(option)
 	})
-	document.getElementById("docTitle").value = docName
-	doctypePayload.doctype = doctypeId
-	doctypePayload.guide = guideId
 }
 
-const updateSignerRoles = (e, parties) => {
+const updateSignerRoles = (e) => {
 	const selectedParty = e.target.value
-	const party = parties.find((party) => party.name === selectedParty)
-	const roleSelect = $('.role_select')
+	const party = doctypeDetails.parties.find((party) => party.name === selectedParty)
+	const roleSelect = $(`#signing_as${e.target.id.charAt(5)}`)
 	const user = users[e.target.id.charAt(5)]
-
 	user[e.target.name] = $(`#${e.target.id} :selected`).text()
 	roleSelect.empty()
 	roleSelect.on('change', (e) => {
+
 		const user = users[e.target.id.charAt(10)]
 		user[e.target.name] = $(`#${e.target.id} :selected`).text()
 	});
@@ -184,9 +189,26 @@ const populateSigners = () => {
 								<hr/>
 							</form>
 						`)
-
 		signersBlock.append(signer);
+		if (doctypePayload.doctype) {
+			populatePartyOptions()
+		}
 
+		$(`#party${i}`).change(function (e) {
+			updateSignerRoles(e)
+		});
+
+		// $(`#party${i}`).val(user.party)
+		// 	.find("option[value='" + `${user.party}` + "']").attr('selected', true);
+
+		$(`#party${i} option`).each(function () {
+			if ($(this).val() === user.party)
+				$(this).attr("selected", true);
+		});
+
+		// $(`#party${i} option`).filter(function () {
+		// 	return ($(this).val() == user.party); //To select Blue
+		// }).prop('selected', true);
 	})
 }
 const addSignerForm = () => {
