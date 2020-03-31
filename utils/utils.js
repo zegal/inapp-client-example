@@ -25,7 +25,7 @@ let doctypes
 async function initialize(key) {
 	zegal =  new Zegal(key);
 	await zegal.init();
-	getAllGuides();
+	getGuideCategories();
 }
 
 const toSnakeCase = (str) => {
@@ -39,14 +39,13 @@ const toSnakeCase = (str) => {
 	}
 }
 
-async function getAllGuides() {
-
-	let guideCats = await zegal.getAllGuides();
+async function getGuideCategories() {
+	let guideCats = await zegal.getGuideCategories();
 	let accordion = $('#accordion')
-	guideCats.forEach((guideCat) => {
-
+	guideCats = Array.from(guideCats)
+	
+	guideCats.map((guideCat) => {
 		accordion.append($(`
-
 			<div class="card">
 				<div class="card-header" id="cat${toSnakeCase(guideCat.name)}">
 					<h5 class="mb-0">
@@ -60,13 +59,10 @@ async function getAllGuides() {
 				<div id="${toSnakeCase(guideCat.name)}" class="collapse card-body" aria-labelledby="cat${toSnakeCase(guideCat.name)}" data-parent="#accordion">
 				</div>
 			</div>
-
-		
-
 		`))
+		
 		const guideCatDiv = $(`#${toSnakeCase(guideCat.name)}`)
 		guideCat.guides.map((guide) => {
-
 			guideDiv = $(`<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
 									aria-expanded="false" name='${guide.name}'>${guide.name}</button>`);
 			guideCatDiv.append(guideDiv)
@@ -124,7 +120,6 @@ const selectDoctype = async(guideId, doctypeId, docName) => {
 
 const populatePartyOptions = () => {
 	const partySelect = $('.party_select')
-	// partySelect.empty()
 	doctypeDetails.parties && doctypeDetails.parties.map((party) => {
 		const option = $(`<option id='${party.id}'>${party.name}</option>`);
 		partySelect.append(option)
@@ -133,14 +128,16 @@ const populatePartyOptions = () => {
 
 const updateSignerRoles = (e) => {
 	const selectedParty = e.target.value
+	const index = e.target.dataset.id // get targeted user index
 	const party = doctypeDetails.parties.find((party) => party.name === selectedParty)
-	const roleSelect = $(`#signing_as${e.target.id.charAt(5)}`)
-	const user = users[e.target.id.charAt(5)]
+	const roleSelect = $(`#signing_as${index}`)
+	const user = users[index]
+	// set selected signer party to user
 	user[e.target.name] = $(`#${e.target.id} :selected`).text()
-	// roleSelect.empty()
-	roleSelect.on('change', (e) => {
 
-		const user = users[e.target.id.charAt(10)]
+	roleSelect.on('change', (e) => {
+		const user = users[e.target.dataset.id]
+		// set selected signer role to user
 		user[e.target.name] = $(`#${e.target.id} :selected`).text()
 	});
 	party.signingRoles.map((role) => {
@@ -163,10 +160,10 @@ const populateSigners = () => {
 								<div class="form-group">
 									<input type="email" class="form-control" id="email${i}" placeholder='Email' value='${user.email}' onchange='updateUser(${i}, "email")'>
 								</div>
-								<select class="form-group form-control party_select" id="party${i}" value='${user.party}' name='party'>
+								<select class="form-group form-control party_select" id="party${i}" value='${user.party}' name='party' data-id='${i}'>
 									<option>Select signer party</option>
 								</select>
-								<select class="form-group form-control role_select" id="signing_as${i}" value='${user.signing_as}' name='signing_as'>
+								<select class="form-group form-control role_select" id="signing_as${i}" value='${user.signing_as}' name='signing_as', data-id='${i}'>
 									<option>Select signer role</option>	
 								</select>
 								<hr/>
