@@ -25,7 +25,7 @@ let doctypes
 async function initialize(key) {
 	zegal =  new Zegal(key);
 	await zegal.init();
-	getDoctypes();
+	getGuideCategories();
 }
 
 const toSnakeCase = (str) => {
@@ -36,19 +36,13 @@ const toSnakeCase = (str) => {
 	}
 }
 
-async function getDoctypes() {
-
-	let guideCats = await zegal.getDoctypes();
-	let doctypeChooser = $('#doctypeChooser')
-	let guideChooser = $('#guidesMenu')
+async function getGuideCategories() {
+	let guideCats = await zegal.getGuideCategories();
 	let accordion = $('#accordion')
-	guideCats.forEach((guideCat) => {
-		// button = $(`<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-		// 						aria-expanded="false">${guide.name}</button>`);
-		// guideChooser.append(button)
-
+	guideCats = Array.from(guideCats)
+	
+	guideCats.map((guideCat) => {
 		accordion.append($(`
-
 			<div class="card">
 				<div class="card-header" id="cat${toSnakeCase(guideCat.name)}">
 					<h5 class="mb-0">
@@ -62,13 +56,10 @@ async function getDoctypes() {
 				<div id="${toSnakeCase(guideCat.name)}" class="collapse card-body" aria-labelledby="cat${toSnakeCase(guideCat.name)}" data-parent="#accordion">
 				</div>
 			</div>
-
-		
-
 		`))
+		
 		const guideCatDiv = $(`#${toSnakeCase(guideCat.name)}`)
 		guideCat.guides.map((guide) => {
-
 			guideDiv = $(`<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
 									aria-expanded="false">${guide.name}</button>`);
 			guideCatDiv.append(guideDiv)
@@ -85,19 +76,6 @@ async function getDoctypes() {
 		})
 	})
 }
-// async function getDoctypes() {
-// 	let doctypes = await zegal.getDoctypes();
-// 	let doctypeChooser = $('#doctypeChooser')
-// 	doctypes.forEach((guide) => {
-// 		Object.entries(guide).forEach(([key, doctypes]) => {
-// 			doctypes.map((doctype) => {
-// 				button = $(`<button class="nav-link active" id="v-pills-home-tab" data-toggle="pill" role="tab" aria-controls="v-pills-home" aria-selected="true" onclick="selectDoctype(doctype.id)">${doctype.display_name}</button>`);
-// 				button.on('click', () => selectDoctype(key, doctype.id, doctype.display_name));
-// 				doctypeChooser.append(button)
-// 			})
-// 		})
-// 	})
-// }
 
 const checkDoctypeSelected = () => {
 	if (doctypePayload.guide) {
@@ -133,7 +111,6 @@ async function createDocumentHandler() {
 const selectDoctype = async(guideId, doctypeId, docName) => {
 	const doctypeDetails = await zegal.getDoctypeSample(doctypeId)
 	const partySelect = $('.party_select')
-	partySelect.on('change', (e) => updateSignerRoles(e, doctypeDetails.parties));
 	doctypeDetails.parties && doctypeDetails.parties.map((party) => {
 		const option = $(`<option id='${party.id}'>${party.name}</option>`);
 		partySelect.append(option)
@@ -145,14 +122,16 @@ const selectDoctype = async(guideId, doctypeId, docName) => {
 
 const updateSignerRoles = (e, parties) => {
 	const selectedParty = e.target.value
-	const party = parties.find((party) => party.name === selectedParty)
-	const roleSelect = $('.role_select')
-	const user = users[e.target.id.charAt(5)]
-
+	const index = e.target.dataset.id // get targeted user index
+	const party = doctypeDetails.parties.find((party) => party.name === selectedParty)
+	const roleSelect = $(`#signing_as${index}`)
+	const user = users[index]
+	// set selected signer party to user
 	user[e.target.name] = $(`#${e.target.id} :selected`).text()
-	roleSelect.empty()
+
 	roleSelect.on('change', (e) => {
-		const user = users[e.target.id.charAt(10)]
+		const user = users[e.target.dataset.id]
+		// set selected signer role to user
 		user[e.target.name] = $(`#${e.target.id} :selected`).text()
 	});
 	party.signingRoles.map((role) => {
@@ -175,11 +154,11 @@ const populateSigners = () => {
 								<div class="form-group">
 									<input type="email" class="form-control" id="email${i}" placeholder='Email' value='${user.email}' onchange='updateUser(${i}, "email")'>
 								</div>
-								<select class="form-group form-control party_select" id="party${i}" value='${user.party}' name='party'>
+								<select class="form-group form-control party_select" id="party${i}" value='${user.party}' name='party' data-id='${i}'>
 									<option>Select signer party</option>
 								</select>
-								<select class="form-group form-control role_select" id="signing_as${i}" value='${user.signing_as}' name='signing_as'>
-									<option>Select signer role</option>
+								<select class="form-group form-control role_select" id="signing_as${i}" value='${user.signing_as}' name='signing_as', data-id='${i}'>
+									<option>Select signer role</option>	
 								</select>
 								<hr/>
 							</form>
