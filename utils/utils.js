@@ -30,9 +30,12 @@ async function initialize(key) {
 
 const toSnakeCase = (str) => {
 	if(str) {
-		return str.match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g)
-			.map(x => x.toLowerCase())
-			.join('_');
+		const match = str.match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g)
+		if(match) {
+			return match
+				.map(x => x.toLowerCase())
+				.join('_');
+		}
 	}
 }
 
@@ -61,30 +64,27 @@ async function getGuideCategories() {
 		const guideCatDiv = $(`#${toSnakeCase(guideCat.name)}`)
 		guideCat.guides.map((guide) => {
 			guideDiv = $(`<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-									aria-expanded="false">${guide.name}</button>`);
+									aria-expanded="false" name='${guide.name}'>${guide.name}</button>`);
 			guideCatDiv.append(guideDiv)
-			const doctypeList = $(`<div class="dropdown-menu"></div >`)
-
-			guide.doctypes.map((doctype) => {
-				doctypes = $(`<button class="dropdown-item" href="#">${doctype.display_name}</button>`)
-				doctypes.on('click', () => selectDoctype(guide._id, doctype.id, doctype.display_name));
-
-				doctypeList.append(doctypes)
+			let doctypeList = $(`<div class="dropdown-menu"></div >`)
+			guideDiv.on('click', (e) => {
+				const selectedGuide = guideCat.guides.find((guide) => guide.name === e.target.name)
+				doctypeList.empty()
+				selectedGuide.doctypes.map((doctype) => {
+					console.log(e.target.name, doctype.display_name)
+					doctypes = $(`<button class="dropdown-item" href="#">${doctype.display_name}</button>`)
+					doctypes.on('click', () => selectDoctype(guide._id, doctype.id, doctype.display_name));
+	
+					doctypeList.append(doctypes)
+				})
+	
+				guideCatDiv.append(doctypeList)
 			})
-
-			guideCatDiv.append(doctypeList)
 		})
 	})
 }
 
-const checkDoctypeSelected = () => {
-	if (doctypePayload.guide) {
-		return true
-	}
-	return false
-}
 async function createDocumentHandler() {
-	const doctypeSelected = checkDoctypeSelected()
 	if(doctypePayload.guide) {
 		$('#zegalButton').attr('data-target', "#createModal")
 		doctypePayload = {
@@ -99,7 +99,6 @@ async function createDocumentHandler() {
 			docCompletionButton: document.getElementById('docCompletionButton').value || 'Complete DBQ'
 		}
 		
-		// document.getElementById('modalTitle').innerHTML = doctypePayload.title
 		await zegal.createDocument(doctypePayload, options)
 	} else {
 		alert('Please select doctype');
@@ -107,20 +106,27 @@ async function createDocumentHandler() {
 	}
 };
 
-
+let doctypeDetails
 const selectDoctype = async(guideId, doctypeId, docName) => {
-	const doctypeDetails = await zegal.getDoctypeSample(doctypeId)
+	doctypeDetails = await zegal.getDoctypeSample(doctypeId)
+	
+	document.getElementById("docTitle").value = docName
+	doctypePayload.doctype = doctypeId
+	doctypePayload.guide = guideId
+
+	populatePartyOptions();
+	$(window).scrollTop(0);
+}
+
+const populatePartyOptions = () => {
 	const partySelect = $('.party_select')
 	doctypeDetails.parties && doctypeDetails.parties.map((party) => {
 		const option = $(`<option id='${party.id}'>${party.name}</option>`);
 		partySelect.append(option)
 	})
-	document.getElementById("docTitle").value = docName
-	doctypePayload.doctype = doctypeId
-	doctypePayload.guide = guideId
 }
 
-const updateSignerRoles = (e, parties) => {
+const updateSignerRoles = (e) => {
 	const selectedParty = e.target.value
 	const index = e.target.dataset.id // get targeted user index
 	const party = doctypeDetails.parties.find((party) => party.name === selectedParty)
@@ -163,8 +169,17 @@ const populateSigners = () => {
 								<hr/>
 							</form>
 						`)
-
 		signersBlock.append(signer);
+		if (doctypePayload.doctype) {
+			populatePartyOptions()
+		}
+
+		$(`#party${i}`).change(function (e) {
+			updateSignerRoles(e)
+		});
+
+		user.party && $(`#party${i}`).append(`<option selected>${user.party}</option>`)
+		user.signing_as && $(`#signing_as${i}`).append(`<option selected>${user.signing_as}</option>`)
 
 	})
 }
