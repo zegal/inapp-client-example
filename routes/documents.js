@@ -17,7 +17,9 @@ router.post("/", async function(req, res, next) {
 router.get("/", async function(req, res, next) {
   try {
     const documents = await DocumentService.getAllDocuments();
-    res.render("document", { documents, title: "Document" });
+    res.render("document", { documents,
+      title: "API portal - Documents",
+    });
   } catch (err) {
     console.log(err);
     res.render("error", err);
