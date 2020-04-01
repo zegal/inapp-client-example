@@ -114,11 +114,14 @@
 
 		});
 
+		$('#createModal').on('hidden.bs.modal', function () {
+			localStorage.setItem('activeModal', '');
+		});
+
 		window.addEventListener('message', function (e) {
 			$("#createModal").modal('hide');
 			alert('Transaction completed')
 		}, false);
-		
 	</script>
 
 </html>

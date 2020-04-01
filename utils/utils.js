@@ -25,6 +25,13 @@ let doctypes
 async function initialize(key) {
 	zegal =  new Zegal(key);
 	await zegal.init();
+	
+	// show unclosed modal on refresh
+	const activeModal = localStorage.getItem('activeModal');
+	if (activeModal) {
+		$("#createModal").modal('show');
+		showDocumentModal(activeModal)
+	}
 	getGuideCategories();
 }
 
@@ -99,12 +106,17 @@ async function createDocumentHandler() {
 			docCompletionButton: document.getElementById('docCompletionButton').value || 'Complete DBQ'
 		}
 		
-		await zegal.createDocument(doctypePayload, options)
+		const doc = await zegal.createDocument(doctypePayload, options)
+		localStorage.setItem('activeModal', doc.document._id);
 	} else {
 		alert('Please select doctype');
 		return
 	}
 };
+
+function showDocumentModal(docId) {
+	zegal.showDocumentModal(docId);
+}
 
 let doctypeDetails
 const selectDoctype = async(guideId, doctypeId, docName) => {
