@@ -36,7 +36,6 @@ app.use(
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.static(path.join(__dirname, "utils")));
-// app.use(express.static(path.join(__dirname, "../zegal-client")));
 app.use("/", indexRouter);
 app.use("/documents", documentsRouter);
 
