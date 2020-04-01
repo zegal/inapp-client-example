@@ -29,7 +29,6 @@ async function initialize(key) {
 	// show unclosed modal on refresh
 	const activeModal = localStorage.getItem('activeModal');
 	if (activeModal) {
-		$("#createModal").modal('show');
 		showDocumentModal(activeModal)
 	}
 	getGuideCategories();
@@ -115,6 +114,7 @@ async function createDocumentHandler() {
 };
 
 function showDocumentModal(docId) {
+	$("#createModal").modal('show')
 	zegal.showDocumentModal(docId);
 }
 

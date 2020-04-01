@@ -74,14 +74,27 @@
 						</form>
 					</div>
 				</div>
-
-				<a href="/documents"> List of documents </a>
+				<br/>
+				<hr />
+				<p>
+					<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#documentsList"
+						aria-expanded="false" aria-controls="documentsList">
+						List of documents:
+					</button>
+				</p>
+				<div id='documentsList' class="collapse">
+					<div class="list-group">
+						<% for( let document of documents) {%>
+						<button type="button" class="list-group-item list-group-item-action"
+							onclick="showDocumentModal('<%= document._id %>')"><%= document.title %></button>
+						<% } %>
+					</div>
+				</div>
 			</div>
 			<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" id='createModal'aria-hidden="true">
 				<div class="modal-dialog modal-lg" role="document">
 					<div class="modal-content">
 						<div class="modal-header">
-							<!-- <h5 id='modalTitle'></h5> -->
 							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 								<span aria-hidden="true">&times;</span>
 							</button>
