@@ -103,7 +103,7 @@ async function createDocumentHandler() {
 			docCompletionButton: document.getElementById('docCompletionButton').value || 'Complete DBQ'
 		}
 		
-		const doc = await zegal.createDocument(doctypePayload, options, 'anyModalBodyId')
+		const doc = await zegal.createDocument(doctypePayload, options, 'modalBodyId')
 		localStorage.setItem('activeModal', doc.document._id);
 		localStorage.setItem('options', JSON.stringify(options));
 	} else {
@@ -114,7 +114,7 @@ async function createDocumentHandler() {
 
 function showDocumentModal(docId, options) {
 	$("#createModal").modal('show')
-	zegal.showDocumentModal(docId, options, 'anyModalBodyId');
+	zegal.showDocumentModal(docId, options, 'modalBodyId');
 }
 
 let doctypeDetails
