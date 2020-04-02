@@ -37,7 +37,7 @@ async function initialize(key) {
 
 
 // Id of modal body where zegal app will be displayed
-let modalDivId = 'modalBodyId'
+const modalDivId = 'modalBodyId'
 
 const toSnakeCase = (str) => {
 	if(str) {
