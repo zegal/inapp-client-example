@@ -35,6 +35,10 @@ async function initialize(key) {
 	getGuideCategories();
 }
 
+
+// Id of modal body where zegal app will be displayed
+let modalDivId = 'modalBodyId'
+
 const toSnakeCase = (str) => {
 	if(str) {
 		const match = str.match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g)
@@ -103,7 +107,7 @@ async function createDocumentHandler() {
 			docCompletionButton: document.getElementById('docCompletionButton').value || 'Complete DBQ'
 		}
 		
-		const doc = await zegal.createDocument(doctypePayload, options, 'modalBodyId')
+		const doc = await zegal.createDocument(doctypePayload, options, modalDivId)
 		localStorage.setItem('activeModal', doc.document._id);
 		localStorage.setItem('options', JSON.stringify(options));
 	} else {
@@ -114,7 +118,7 @@ async function createDocumentHandler() {
 
 function showDocumentModal(docId, options) {
 	$("#createModal").modal('show')
-	zegal.showDocumentModal(docId, options, 'modalBodyId');
+	zegal.showDocumentModal(docId, options, modalDivId);
 }
 
 let doctypeDetails
