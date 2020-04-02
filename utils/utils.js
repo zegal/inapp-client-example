@@ -29,10 +29,15 @@ async function initialize(key) {
 	// show unclosed modal on refresh
 	const activeModal = localStorage.getItem('activeModal');
 	if (activeModal) {
-		showDocumentModal(activeModal)
+		const options = localStorage.getItem('options');
+		showDocumentModal(activeModal, options)
 	}
 	getGuideCategories();
 }
+
+
+// Id of modal body where zegal app will be displayed
+const modalDivId = 'modalBodyId'
 
 const toSnakeCase = (str) => {
 	if(str) {
@@ -77,13 +82,10 @@ async function getGuideCategories() {
 				const selectedGuide = guideCat.guides.find((guide) => guide.name === e.target.name)
 				doctypeList.empty()
 				selectedGuide.doctypes.map((doctype) => {
-					console.log(e.target.name, doctype.display_name)
 					doctypes = $(`<button class="dropdown-item" href="#">${doctype.display_name}</button>`)
 					doctypes.on('click', () => selectDoctype(guide._id, doctype.id, doctype.display_name));
-	
 					doctypeList.append(doctypes)
 				})
-	
 				guideCatDiv.append(doctypeList)
 			})
 		})
@@ -105,17 +107,18 @@ async function createDocumentHandler() {
 			docCompletionButton: document.getElementById('docCompletionButton').value || 'Complete DBQ'
 		}
 		
-		const doc = await zegal.createDocument(doctypePayload, options)
+		const doc = await zegal.createDocument(doctypePayload, options, modalDivId)
 		localStorage.setItem('activeModal', doc.document._id);
+		localStorage.setItem('options', JSON.stringify(options));
 	} else {
 		alert('Please select doctype');
 		return
 	}
 };
 
-function showDocumentModal(docId) {
+function showDocumentModal(docId, options) {
 	$("#createModal").modal('show')
-	zegal.showDocumentModal(docId);
+	zegal.showDocumentModal(docId, options, modalDivId);
 }
 
 let doctypeDetails
