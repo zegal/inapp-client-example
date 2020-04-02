@@ -4,8 +4,8 @@ metadata:
   name: api-portal-config
   namespace: dev
 data:
-  MONGO_SERVER: mongodb+srv://apiPortal:dragonlaw@cluster0-h8ub3.mongodb.net/apiportal?retryWrites=true&w=majority
+  MONGO_SERVER: mongodb://mongo-svc/apiportal
   PORT: "3000"
   ZEGAL_CLIENT: "https://zegal-client.s3.ap-south-1.amazonaws.com/dev/zegal.js"
-  CLIENT_KEY: pk_8e367994-27df-43ee-8a16-f0fb1c513ce3
+  CLIENT_KEY: pk_35f9cc27-fc94-4d8d-9bf6-2978a3a1bdee
   NODE_ENV: development

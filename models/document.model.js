@@ -4,7 +4,12 @@ var mongoose = require("mongoose");
 var Document = mongoose.Schema(
   {
     title: { type: String, required: true },
-    json: { type: mongoose.Schema.Types.Mixed },
+    docxPointer: { type: String },
+    pdfPointer: { type: String },
+    signers: { type: mongoose.Schema.Types.Mixed },
+    state: { type: String },
+    owner: { type: String },
+    org: { type: String },
   },
   {
     _id: true,
