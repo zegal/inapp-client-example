@@ -10,6 +10,7 @@ var Document = mongoose.Schema(
     state: { type: String },
     owner: { type: String },
     org: { type: String },
+    data: { type: mongoose.Schema.Types.Mixed },
   },
   {
     _id: true,
