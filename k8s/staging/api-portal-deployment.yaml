@@ -20,6 +20,12 @@ spec:
           envFrom:
             - configMapRef:
                 name: api-portal-config
+          env:
+            - name: CLIENT_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: CLIENT_KEY
+                  name: api-portal-secrets
           image: nishlashakya/api-portal:0.0.9
           imagePullPolicy: Always
           ports:
