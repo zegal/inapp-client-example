@@ -46,10 +46,10 @@ The Zegal client API is invoked with these basic steps:
     }
     ```
 4.  Create the document and open the Zegal client plugin
-        First, ensure that you have a DIV with an ID of `createModalBody`
+        First, ensure that you send a DIV ID of the modal
         Then add this to trigger the Zegal plugin
     ```
-    const doc = await zegal.createDocument(payload, options);
+    const doc = await zegal.createDocument(targetDivId, payload, options);
     ```
 
 # Options and other customization elements
