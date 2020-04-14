@@ -1,0 +1,12 @@
+
+version: "3.7"
+services:
+  api-portal:
+    env_file: .env
+    build: / # tells Docker where the Dockerfile is for our image from workdir in dockerfile
+    ports:
+      - "3000:3000"
+    expose:
+      - "3000"
+    # restart: always
+
