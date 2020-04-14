@@ -126,7 +126,9 @@ const selectDoctype = async(guideId, doctypeId, docName) => {
 	doctypeDetails = await zegal.getDoctypeSample(doctypeId)
 	
 	document.getElementById("docTitle").value = docName
-	doctypePayload.doctype = doctypeId
+	if (!document.getElementById('sendGuideOnly').checked) {
+		doctypePayload.doctype = doctypeId
+	}
 	doctypePayload.guide = guideId
 
 	populatePartyOptions();
