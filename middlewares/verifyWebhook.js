@@ -2,8 +2,8 @@ const portal = require("@zegal/apiportal-utils");
 async function verifyWebhook(req, res, next) {
   try {
     await portal.verifyWebhookEvent(
-      req.body,
-      req.headers["X-Dragon-Law-Signature"],
+      JSON.stringify(req.body),
+      req.headers["x-dragon-law-signature"],
       process.env.SECRET_KEY
     );
     next();

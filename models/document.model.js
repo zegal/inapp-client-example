@@ -5,7 +5,7 @@ const Document = mongoose.Schema(
   {
     title: { type: String, required: true },
     doctype: { type: String, required: true },
-    description: { type: String, required: true },
+    description: { type: String },
     data: { type: mongoose.Schema.Types.Mixed },
     state: { type: String },
     owner: { type: String },
