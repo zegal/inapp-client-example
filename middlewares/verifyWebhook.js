@@ -1,4 +1,4 @@
-const portal = require("@zegal/apiportal-utils");
+const portal = require("@zegal/zegal-utils");
 async function verifyWebhook(req, res, next) {
   try {
     await portal.verifyWebhookEvent(
