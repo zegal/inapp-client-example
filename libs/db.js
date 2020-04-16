@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const config = require("../config/config");
 
 // to fix all deprecation warnings: https://mongoosejs.com/docs/deprecations.html
-mongoose.connect(process.env.MONGO_SERVER, {
+mongoose.connect(config.MONGO_SERVER, {
   useNewUrlParser: true,
   useFindAndModify: false,
   useUnifiedTopology: true, // http://mongodb.github.io/node-mongodb-native/3.3/reference/unified-topology/
