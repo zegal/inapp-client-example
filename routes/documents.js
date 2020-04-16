@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
-
+const verifyWebhook = require("../middlewares/verifyWebhook")
 const DocumentService = require("../services/document/document.service");
 
-router.post("/state", async function(req, res, next) {
+router.post("/state", verifyWebhook, async function(req, res, next) {
   try {
     const document = req.body;
     const newDoc = await DocumentService.postDocument(document);
@@ -13,7 +13,7 @@ router.post("/state", async function(req, res, next) {
     res.status(400).send(err);
   }
 });
-router.post("/invite", async function(req, res, next) {
+router.post("/invite", verifyWebhook, async function(req, res, next) {
   try {
     const document = req.body;
     const newDoc = await DocumentService.postDocument(document);
