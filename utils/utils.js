@@ -51,7 +51,7 @@ const toSnakeCase = (str) => {
 }
 
 async function getGuideCategories() {
-	let guideCats = await zegal.getGuideCategories();
+	let guideCats = await zegal.getGuideCategoriesByOrg();
 	let accordion = $('#accordion')
 	guideCats = Array.from(guideCats)
 	
