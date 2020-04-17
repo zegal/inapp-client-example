@@ -150,7 +150,7 @@ const updateSignerRoles = (e) => {
 	const roleSelect = $(`#signing_as${index}`)
 	const user = users[index]
 	// set selected signer party to user
-	user[e.target.name] = $(`#${e.target.id} :selected`).text()
+	user[e.target.name] = $(`#${e.target.id} :selected`).attr("id")
 
 	roleSelect.on('change', (e) => {
 		const user = users[e.target.dataset.id]
