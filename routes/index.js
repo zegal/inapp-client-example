@@ -1,5 +1,6 @@
-var express = require("express");
-var router = express.Router();
+const express = require("express");
+const router = express.Router();
+const config = require("../config/config");
 const DocumentService = require("../services/document/document.service");
 
 /* GET home page. */
@@ -8,10 +9,10 @@ router.get("/", async function(req, res, next) {
 
   res.render("index", {
     title: "API Portal",
-    zegalClient: process.env.ZEGAL_CLIENT,
-    key: process.env.CLIENT_KEY,
+    zegalClient: config.ZEGAL_CLIENT,
+    key: config.CLIENT_KEY,
     signers: [],
-    documents
+    documents,
   });
 });
 

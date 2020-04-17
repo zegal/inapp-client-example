@@ -1,10 +1,11 @@
 const portal = require("@zegal/zegal-utils");
+const config = require("../config/config");
 async function verifyWebhook(req, res, next) {
   try {
     await portal.verifyWebhookEvent(
       JSON.stringify(req.body),
       req.headers["x-dragon-law-signature"],
-      process.env.SECRET_KEY
+      config.SECRET_KEY
     );
     next();
   } catch (err) {
