@@ -1,4 +1,5 @@
 
+# remove .test to run docker image container with the given env. If docker image is made with the env_file, then the project env will be used in the image rather than the config file in our app
 version: "3.7"
 services:
   api-portal:
