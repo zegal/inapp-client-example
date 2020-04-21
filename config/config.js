@@ -1,4 +1,5 @@
-let env = process.env;
+require("dotenv").config();
+let env = process.env
 if (process.env.DEBUG_MODE === true || process.env.DEBUG_MODE === "true") {
   // in the deployment, we'll always use main env. this below is for local debug mode
   if (process.env.NODE_ENV === "development") {
@@ -10,5 +11,5 @@ if (process.env.DEBUG_MODE === true || process.env.DEBUG_MODE === "true") {
   }
 }
 module.exports = {
-  ...env.parsed,
+  ...env,
 };
