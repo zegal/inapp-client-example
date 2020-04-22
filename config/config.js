@@ -1,15 +1,16 @@
-require("dotenv").config();
-let env = process.env
-if (process.env.DEBUG_MODE === true || process.env.DEBUG_MODE === "true") {
-  // in the deployment, we'll always use main env. this below is for local debug mode
-  if (process.env.NODE_ENV === "development") {
-    env = require("dotenv").config();
-  } else if (process.env.NODE_ENV === "staging") {
-    env = require("dotenv").config({ path: "staging.env" });
-  } else if (process.env.NODE_ENV === "production") {
-    env = require("dotenv").config({ path: "prod.env" });
-  }
+if (process.env.NODE_ENV === "development") {
+  require("dotenv").config();
+} else if (process.env.NODE_ENV === "staging") {
+  require("dotenv").config({ path: "staging.env" });
+  console.log(process.env.MONGO_SERVER);
+} else if (process.env.NODE_ENV === "production") {
+  require("dotenv").config({ path: "prod.env" });
+} else {
+  // if node server is run without any given env, then load default env
+  require("dotenv").config();
 }
+const env = process.env;
+
 module.exports = {
   ...env,
 };
