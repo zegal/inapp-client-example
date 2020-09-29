@@ -2,13 +2,6 @@
 # yarn lockfile v1
 
 
-"@zegal/zegal-client@^0.1.9":
-  version "0.1.9"
-  resolved "https://registry.npmjs.org/@zegal/zegal-client/-/zegal-client-0.1.9.tgz#68e869c259f3a510a5b1f58fee34fe7969c2fd09"
-  integrity sha512-FnYtbyz/qWN8fubpPVcDhoGPOWCELYB1g/FfbrPAqWQX9pG3E6WC+79KQJCJzo/xDTpZiyuqZwpdsAdA3JKrAA==
-  dependencies:
-    xmlhttprequest "^1.8.0"
-
 "@zegal/zegal-utils@^0.0.1":
   version "0.0.1"
   resolved "https://registry.npmjs.org/@zegal/zegal-utils/-/zegal-utils-0.0.1.tgz#b617c917fd5ecdc6f8c76996885c923b44449bca"
