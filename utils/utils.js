@@ -107,9 +107,12 @@ async function createDocumentHandler() {
 			docCompletionButton: document.getElementById('docCompletionButton').value || 'Complete DBQ'
 		}
 		
-		const doc = await zegal.createDocument(modalDivId, doctypePayload, options)
+		const doc = await zegal.createDocument(doctypePayload, options)
 		localStorage.setItem('activeModal', doc.document._id);
 		localStorage.setItem('options', JSON.stringify(options));
+		const activeModal = localStorage.getItem('activeModal');
+
+		showDocumentModal(activeModal, options)
 	} else {
 		alert('Please select doctype');
 		return
@@ -123,7 +126,7 @@ function showDocumentModal(docId, options = '') {
 
 let doctypeDetails
 const selectDoctype = async(guideId, doctypeId, docName) => {
-	doctypeDetails = await zegal.getDoctypeSample(doctypeId)
+	doctypeDetails = await zegal.getDoctypeSampleWithMetadata(doctypeId)
 	
 	document.getElementById("docTitle").value = docName
 	if (!document.getElementById('sendGuideOnly').checked) {

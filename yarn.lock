@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@zegal/apiportal-utils@^0.0.1":
+"@zegal/zegal-utils@^0.0.1":
   version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@zegal/apiportal-utils/-/apiportal-utils-0.0.1.tgz#37da15cb94124d2a8d89ab612da564c2a135764f"
-  integrity sha512-SpjX+CBcECc5zWCCFCl0KYUHWb017TtqMPVXxfG2exWPqFDV47ecqQqj+gDMQCfbU2NNd/WAoOm/rQHAtgJsRA==
+  resolved "https://registry.npmjs.org/@zegal/zegal-utils/-/zegal-utils-0.0.1.tgz#b617c917fd5ecdc6f8c76996885c923b44449bca"
+  integrity sha512-oEaWwbjUUg2kYhKtDb7I0d041d3cCGg2kiKeqAKXvsgTaKWdgTTeMYM2CO1kzBj71oHChU8dSbgOzF+WDQUZBw==
   dependencies:
     prettier "^2.0.4"
 
