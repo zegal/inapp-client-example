@@ -24,7 +24,6 @@ let zegal
 let doctypes
 async function initialize(key) {
 	zegal =  new Zegal(key);
-	await zegal.init();
 	
 	// show unclosed modal on refresh
 	const activeModal = localStorage.getItem('activeModal');
